@@ -4,17 +4,19 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnPostSlug extends Migration
+class ConstraintPostsCategories extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up(){
-
+    public function up()
+    {
         Schema::table('posts', function (Blueprint $table) {
-          $table->string('slug')->unique()->after('title');
+            $table->unsignedInteger('category');
+
+            $table->foreign('category')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 
@@ -23,10 +25,10 @@ class AddColumnPostSlug extends Migration
      *
      * @return void
      */
-    public function down(){
-
+    public function down()
+    {
         Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('slug');
+            $table->dropColumn('category');
         });
     }
 }

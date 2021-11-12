@@ -18,8 +18,6 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->string('subtitle');
             $table->text('description');
-            $table->dateTime('publish_at');
-            $table->timestamps();
         });
     }
 

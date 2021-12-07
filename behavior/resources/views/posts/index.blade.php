@@ -12,16 +12,30 @@
 <body>
 
 <div class="container my-5">
-    <section class="articles_list">
-        <article class="mb-5">
-            <h1>Título</h1>
-            <h2>Subtítulo</h2>
-            <p>Descrição</p>
-            <small>Criado em: - Editado em: </small>
-        </article>
-        <hr>
-    </section>
+    <a href="{{ route('posts.create') }}" class="btn btn-success mb-5">Cadastrar novo artigo</a>
+    <?php
+        if(!empty($posts)){ ?>
+            <section class="articles_list">
+                <?php 
+                    foreach($posts as $post){ ?>
+                        <article class="mb-5">
+                            <h1>{{$post->title}}</h1>
+                            <h2>{{$post->subtitle}}</h2>
+                            <p>{{$post->description}}</p>
+                            <small>Criado em: {{ date('d/m/Y H:i', strtotime($post->created_at)) }} - Editado em: {{ date('d/m/Y H:i', strtotime($post->updated_at)) }}</small>
 
+                            <form action="{{ route('posts.destroy', ['id' => $post->id]) }}" method="post" class="mt-3">
+                                @csrf
+                                @method('DELETE')
+                                <a href="{{ route('posts.edit', ['id' => $post->id]) }}" class="btn btn-primary">Editar</a>
+                                <button type="submit" class="btn btn-danger">Excluir</button>
+                            </form>
+                        </article>
+                        <hr> <?php
+                    } ?>
+            </section> <?php
+        }
+    ?>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

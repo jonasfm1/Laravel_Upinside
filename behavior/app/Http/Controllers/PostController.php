@@ -7,6 +7,25 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    public function forceDelete($post){
+        Post::onlyTrashed()->where(['id' => $post])->forceDelete();
+        return redirect()->route('posts.trashed');
+    }
+
+    public function restore($post){
+        $post = Post::onlyTrashed()->where(['id' => $post])->first();
+        
+        if($post->trashed()){
+            $post->restore();
+        }
+        return redirect()->route('posts.trashed');
+    }
+
+    public function trashed(){
+        $posts = Post::onlyTrashed()->get();
+        return view('posts.trashed', ['posts' => $posts]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -83,11 +102,11 @@ class PostController extends Controller
         $post->save();
 
         // 2 -> Mass assigment (Preenchimento em massa )
-        // Post::create([
-        //     'title' => $request->title,
-        //     'subtitle' => $request->subtitle,
-        //     'description' => $request->description
-        // ]);
+        Post::create([
+            'title' => $request->title,
+            'subtitle' => $request->subtitle,
+            'description' => $request->description
+        ]);
 
         // 3 -> First Or New o primeiro array informado funciona como um WHERE ele vai tentar
         // verificar no banco de dados se ja existe algum artigo na coluna title com o valor que tamos passando em "$request->title"
